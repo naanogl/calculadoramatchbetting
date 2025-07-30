@@ -129,7 +129,7 @@ if st.button("🔍 Calcular"):
         casa_pierde = -resultado['importe'] + valor_reembolso
     elif tipo_apuesta == "Rollover":
         casa_gana = resultado['ganancia_casa_real']  # incluye lo ganado + riesgo
-        casa_pierde = -resultado['riesgo']            # lo que pierdes si gana el exchange
+        casa_pierde = -resultado['importe_real']            # lo que pierdes si gana el exchange
 
     else:  # Dinero Real
         casa_gana = resultado['importe'] * (resultado['cuota_a_favor'] - 1)
