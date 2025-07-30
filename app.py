@@ -74,7 +74,7 @@ if st.button("🔍 Calcular"):
     elif tipo_apuesta == "Reembolso":
         resultado = calcular_reembolso(importe, cuota_a_favor, cuota_en_contra, comision, reembolso, retencion)
     elif tipo_apuesta == "Rollover":
-        resultado = calcular_rollover(importe, cuota_a_favor, cuota_en_contra, comision, bono, rollover, retencion)
+        resultado = calcular_rollover(importe, cuota_a_favor, cuota_en_contra, comision, bono, rollover, porcentaje_retencion)
     else:
         st.error("❌ Tipo de apuesta no reconocido.")
         st.stop()
