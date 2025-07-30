@@ -198,6 +198,7 @@ def calcular_rollover(importe, cuota_a_favor, cuota_exchange, comision, bono, ro
 
     return {
         "tipo": "rollover",
+        "importe_real": importe,
         "importe": importe + bono,
         "bono": bono,
         "total": importe + bono,
@@ -208,7 +209,9 @@ def calcular_rollover(importe, cuota_a_favor, cuota_exchange, comision, bono, ro
         "comision": comision,
         "lay": mejor_lay,
         "riesgo": riesgo,
-        "ganancia_casa": mejor_ganancia_casa + riesgo,
+        "beneficio_promedio": beneficio_promedio,
+        "ganancia_casa": mejor_ganancia_casa,
+        "ganancia_casa_real": mejor_ganancia_casa + riesgo,
         "ganancia_exchange": mejor_ganancia_exchange,
         "diferencia": mejor_diferencia,
         "porcentaje_valor": porcentaje_valor,
@@ -247,9 +250,9 @@ def mostrar_resultados(r):
         print(f"Si ganas en el Exchange\t\t{-r['importe']:.2f}€\t\t{r['lay']*(1 - r['comision']):.2f}€ + freebet "
               f"({valor_freebet:.2f}€)\t{r['ganancia_exchange']:.2f}€")
     elif r['tipo'] == "rollover":
-        print(f"Si ganas en la Casa de apuestas\t{r['ganancia_casa']:.2f}€\t\t{-r['riesgo']:.2f}€"
-              f"\t\t{r['ganancia_casa'] - r['riesgo']:.2f}€")
-        print(f"Si ganas en el Exchange\t\t{-r['importe']:.2f}€\t\t{r['ganancia_exchange'] + r['importe']:.2f}€"
+        print(f"Si ganas en la Casa de apuestas\t{r['ganancia_casa_real']:.2f}€\t\t{-r['riesgo']:.2f}€"
+              f"\t\t{r['ganancia_casa']:.2f}€")
+        print(f"Si ganas en el Exchange\t\t{-r['importe_real']:.2f}€\t\t{r['ganancia_exchange'] + r['importe_real']:.2f}€"
               f"\t\t{r['ganancia_exchange']:.2f}€")
 
     print(f"\n📊 Diferencia entre escenarios: {r['diferencia']:.4f} €")
