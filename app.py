@@ -93,7 +93,7 @@ if st.button("🔍 Calcular"):
             <h4 style='margin-bottom: 10px;'>A Favor</h4>
             <p style='font-size: 18px;'><strong>{:.2f}€</strong> a cuota <strong>{}</strong></p>
         </div>
-        """.format(importe, cuota_a_favor), unsafe_allow_html=True)
+        """.format(resultado['importe'], resultado['cuota_a_favor']), unsafe_allow_html=True)
     
     with col2:
         st.markdown("""
