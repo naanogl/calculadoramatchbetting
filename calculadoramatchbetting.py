@@ -141,41 +141,57 @@ def calcular_reembolso(importe, cuota_a_favor, cuota_exchange, comision, cantida
     }
 
 
-def calcular_rollover(importe, bono, porcentaje_retencion, rollover, cuota_a_favor, cuota_exchange, comision):
+def calcular_rollover(importe, cuota_a_favor, cuota_exchange, comision, bono, rollover, porcentaje_retencion):
     mejor_lay = 0
     mejor_diferencia = float('inf')
     mejor_ganancia_casa = 0
     mejor_ganancia_exchange = 0
 
-    beneficio_apuesta = importe * (cuota_a_favor - 1)
-    beneficio_rollover = rollover * (porcentaje_retencion / 100)
-    beneficio_casa_base = beneficio_apuesta + beneficio_rollover
+    # Dinero total apostado inicialmente (importe + bono) * cuota a favor
+    beneficio_apuesta = importe * cuota_a_favor
 
-    # Aquí aumentamos el rango máximo porque se puede apostar lay sobre importe + rollover
+    # Bono convertido tras ganar la apuesta inicial (no afectado por retención)
+    bono_convertido = bono * cuota_a_favor
+
+    # Cantidad total a apostar para liberar el bono (rollover)
+    # Ya se ha apostado importe, queda por apostar:
+    rollover_pendiente = rollover - importe
+
+    if rollover_pendiente < 0:
+        rollover_pendiente = 0  # No se puede apostar menos de 0
+
+    # Pérdida estimada al completar rollover (solo sobre rollover pendiente)
+    perdida_rollover = rollover_pendiente * (1 - porcentaje_retencion)
+
+    # Máximo lay posible para iterar (importe + rollover apostado) * factor de 300 para precisión
     max_lay = int((importe + rollover) * 300)
 
     for lay in [x / 100 for x in range(1, max_lay + 1)]:
         riesgo = lay * (cuota_exchange - 1)
-
-        ganancia_casa = beneficio_casa_base - riesgo
+        # Beneficio neto en la casa es lo ganado menos la pérdida estimada en rollover
+        beneficio_neto_casa = beneficio_apuesta + bono_convertido - perdida_rollover - importe - riesgo
+        
         ganancia_exchange = lay * (1 - comision) - importe
-        diferencia = abs(ganancia_casa - ganancia_exchange)
+
+        diferencia = abs(beneficio_neto_casa - ganancia_exchange)
 
         if diferencia < mejor_diferencia:
             mejor_diferencia = diferencia
             mejor_lay = lay
-            mejor_ganancia_casa = ganancia_casa
+            mejor_ganancia_casa = beneficio_neto_casa
             mejor_ganancia_exchange = ganancia_exchange
 
     riesgo = mejor_lay * (cuota_exchange - 1)
     beneficio_promedio = (mejor_ganancia_casa + mejor_ganancia_exchange) / 2
-    porcentaje_valor = 100 + (beneficio_promedio / importe) * 100
 
-    if porcentaje_valor >= 98:
+    # Porcentaje valor es beneficio promedio respecto al importe invertido (como porcentaje)
+    porcentaje_valor =  (beneficio_promedio / bono) * 100
+
+    if porcentaje_valor >= 75:
         clasificacion = "🟢 Excelente"
-    elif porcentaje_valor >= 95:
+    elif porcentaje_valor >= 70:
         clasificacion = "🟢 Muy Bueno"
-    elif porcentaje_valor >= 90:
+    elif porcentaje_valor >= 60:
         clasificacion = "🟠 Regular"
     else:
         clasificacion = "🔴 Malo"
@@ -184,6 +200,7 @@ def calcular_rollover(importe, bono, porcentaje_retencion, rollover, cuota_a_fav
         "tipo": "rollover",
         "importe": importe,
         "bono": bono,
+        "total": importe + bono,
         "rollover": rollover,
         "porcentaje_retencion": porcentaje_retencion,
         "cuota_a_favor": cuota_a_favor,
@@ -191,7 +208,7 @@ def calcular_rollover(importe, bono, porcentaje_retencion, rollover, cuota_a_fav
         "comision": comision,
         "lay": mejor_lay,
         "riesgo": riesgo,
-        "ganancia_casa": mejor_ganancia_casa,
+        "ganancia_casa": mejor_ganancia_casa + riesgo,
         "ganancia_exchange": mejor_ganancia_exchange,
         "diferencia": mejor_diferencia,
         "porcentaje_valor": porcentaje_valor,
@@ -201,9 +218,15 @@ def calcular_rollover(importe, bono, porcentaje_retencion, rollover, cuota_a_fav
 
 
 
+
+
+
 def mostrar_resultados(r):
     print(f"\n=== Resultados para apuesta tipo '{r['tipo']}' ===")
-    print(f"A favor (Back): {r['importe']:.2f} € a cuota {r['cuota_a_favor']}")
+    if r['tipo'] == "rollover":
+        print(f"A favor (Back): {r['total']:.2f} € a cuota {r['cuota_a_favor']}")
+    else:
+        print(f"A favor (Back): {r['importe']:.2f} € a cuota {r['cuota_a_favor']}")
     print(f"En contra (Lay): {r['lay']:.2f} € a cuota {r['cuota_exchange']} (riesgo: {r['riesgo']:.2f} €)\n")
     print("Casa de apuestas\tExchange\tTotal")
 
@@ -242,8 +265,9 @@ def mostrar_resultados(r):
 #res = calcular_freebet(10, 7.5, 8.2, 0.02)
 #mostrar_resultados(res)
 
-res = calcular_reembolso(10, 7.5, 8.2, 0.02, cantidad_reembolso=10, porcentaje_uso_freebet=0.7)
+#res = calcular_reembolso(10, 7.5, 8.2, 0.02, cantidad_reembolso=10, porcentaje_uso_freebet=0.7)
+#mostrar_resultados(res)
+
+res = calcular_rollover(200, 3.3, 3.65, 0.02, 100, 600, 0.95)
 mostrar_resultados(res)
 
-#res = calcular_rollover(100, 100, 95, 600, 3.5, 3.9, 0.02)
-#mostrar_resultados(res)
