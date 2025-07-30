@@ -198,7 +198,7 @@ def calcular_rollover(importe, cuota_a_favor, cuota_exchange, comision, bono, ro
 
     return {
         "tipo": "rollover",
-        "importe": importe,
+        "importe": importe + bono,
         "bono": bono,
         "total": importe + bono,
         "rollover": rollover,
