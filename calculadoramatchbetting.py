@@ -155,7 +155,7 @@ def calcular_rollover(importe, cuota_a_favor, cuota_exchange, comision, bono, ro
 
     # Cantidad total a apostar para liberar el bono (rollover)
     # Ya se ha apostado importe, queda por apostar:
-    rollover_pendiente = rollover - importe
+    rollover_pendiente = rollover - importe - bono
 
     if rollover_pendiente < 0:
         rollover_pendiente = 0  # No se puede apostar menos de 0
