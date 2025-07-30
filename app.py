@@ -128,7 +128,7 @@ if st.button("🔍 Calcular"):
         valor_reembolso = reembolso * retencion
         casa_pierde = -resultado['importe'] + valor_reembolso
     elif tipo_apuesta == "Rollover":
-        casa_gana = resultado['importe'] * (resultado['cuota_a_favor'] - 1)
+        casa_gana = resultado['ganancia_casa'] 
         casa_pierde = -resultado['importe']
     else:  # Dinero Real
         casa_gana = resultado['importe'] * (resultado['cuota_a_favor'] - 1)
