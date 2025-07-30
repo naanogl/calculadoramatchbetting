@@ -60,7 +60,7 @@ elif tipo_apuesta == "Rollover":
             bono = st.number_input("🎁 Importe del bono (€)", min_value=1.0, value=importe, step=1.0)
             rollover = st.number_input("🔄 Rollover total requerido (€)", min_value=1.0, value=600.0, step=10.0)
         with col2:
-            porcentaje_retencion = st.slider("🧲 Retención estimada tras completar rollover (%)", 0, 1, 0.95)
+            porcentaje_retencion = st.slider("🧲 Retención estimada tras completar rollover (%)", 0.0, 1.0, 0.95, step=0.01)
 
 # Botón para calcular
 st.markdown("---")
