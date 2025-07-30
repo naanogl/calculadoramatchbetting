@@ -24,7 +24,7 @@ from calculadoramatchbetting import (
 )
 
 st.set_page_config(page_title="Calculadora Match Betting", layout="centered")
-st.title("💸 Calculadora de Match Betting")
+st.title("💸 Calculadora de Match Betting COJONES")
 
 # Menú de selección del tipo de apuesta
 st.markdown("## 🎯 Selecciona el tipo de apuesta")
